@@ -16,8 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from . import views
+from blog import views
 
+
+# by default the URLs add / at the beginning
 urlpatterns = [
     path('', views.index, name='index'),
-    ]
+     path('index/', views.index, name='index'),
+   
+]
