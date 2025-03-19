@@ -1,28 +1,38 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mi Proyecto Django{% endblock %}</title>
-    <!-- Incluye Tailwind CSS (usando CDN o tu archivo compilado) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- O si compilaste Tailwind manualmente: -->
-    <!-- <link href="{% static 'css/tailwind.css' %}" rel="stylesheet"> -->
 </head>
-<body class="bg-gray-100">
-    <header class="bg-blue-600 text-white p-4">
-        <h1 class="text-2xl font-bold">Mi Proyecto Django</h1>
+<body class="bg-gray-100 h-full">
+    <header class="bg-slate-400 text-white p-4 flex items-center justify-between">
+        <div class="flex items-center">
+            <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="h-10 mr-2">
+            <h1 class="text-2xl font-bold">Urblog</h1>
+        </div>
+        <div class="flex items-center">
+            <span class="bg-gray-500 text-white px-2 py-1 rounded">Login</span>
+        </div>
     </header>
 
-    <main class="container mx-auto p-4">
+    <nav class="bg-gray-500 text-white p-4">
+        <div class="max-w-screen-xl mx-auto flex items-center justify-center">
+            <ul class="flex space-x-8">
+                <li><a href="#" class="hover:text-blue-300">Menu</a></li>
+                <li><a href="#" class="hover:text-blue-300">Windows</a></li>
+                <li><a href="#" class="hover:text-blue-300">MacOs</a></li>
+                <li><a href="#" class="hover:text-blue-300">Linux</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main contenido, ocupa toda la altura de la pantalla -->
+    <main class="bg-stone-300 w-full h-[calc(100%-144px)]">
         {% block content %}
-        <!-- El contenido específico de cada página irá aquí -->
         {% endblock %}
     </main>
-
-    <footer class="bg-gray-800 text-white p-4 mt-8">
-        <p>&copy; 2023 Mi Proyecto Django</p>
-    </footer>
 </body>
 </html>
