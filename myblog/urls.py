@@ -24,8 +24,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('index/', views.index, name='index'),
     path('windows/', views.windows, name='windows'),
-    path('linux/', views.windows, name='linux'),
-    path('macos/', views.windows, name='macos'),
+    path('linux/', views.linux, name='linux'),
+    path('macos/', views.macos, name='macos'),
     path('', include('autenticacion.urls')),
    
 ]
