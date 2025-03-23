@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Sesión | Urblog{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center w-full min-h-[calc(100vh-144px)]">
+
+<div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+    <h2 class="text-2xl font-bold mb-4">Iniciar Sesión</h2>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Ingresar
+        </button>
+    </form>
+    <p class="mt-4 text-center">
+        ¿No tienes cuenta? <a href="{% url 'registro' %}" class="text-green-600 hover:underline">Regístrate</a>
+    </p>
+</div>
+</div>
+{% endblock %}
