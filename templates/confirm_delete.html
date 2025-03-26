@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-xl font-bold mb-4">Confirmar eliminación</h2>
+    <p class="mb-6">¿Estás seguro de que quieres eliminar el post "{{ post.title }}"?</p>
+    
+    <form method="post" class="flex justify-between">
+        {% csrf_token %}
+        <a href="{% url 'linux' %}" class="px-4 py-2 bg-gray-300 rounded-md">Cancelar</a>
+        <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+            Eliminar
+        </button>
+    </form>
+</div>
+{% endblock %}

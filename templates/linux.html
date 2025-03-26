@@ -25,6 +25,18 @@
                     <span>Por {{ post.author.username }}</span>
                     <span>{{ post.created_at|date:"d/m/Y" }}</span>
                 </div>
+                
+                <!-- Botón de edición solo para el autor -->
+                {% if post.author == request.user %}
+                <div class="mt-4 flex space-x-2">
+                    <a href="{% url 'edit_post' post.id %}" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                        Editar
+                    </a>
+                    <a href="{% url 'delete_post' post.id %}" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm">
+                        Eliminar
+                    </a>
+                </div>
+                {% endif %}
             </div>
         </div>
         {% empty %}
