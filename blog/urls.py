@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 from blog import views
 from .views import linux_posts
 from .views import windows_posts
@@ -6,8 +6,13 @@ from .views import macos_posts
 from .views import edit_post
 from .views import delete_post
 from .views import create_post
+from rest_framework.routers import DefaultRouter
+from .views import PostViewSet
 
 from . import views
+
+router = DefaultRouter()
+router.register(r'posts', PostViewSet)
 
 urlpatterns = [
     path("index", views.index, name="index"),
@@ -18,5 +23,6 @@ urlpatterns = [
     path('posting/', views.create_post, name='create_post'),  # Crear posts
     path('post/<int:post_id>/edit/', edit_post, name='edit_post'), # edita los post
     path('post/<int:post_id>/delete/', delete_post, name='delete_post'), # elimina los posts
+    path('api/', include(router.urls))
 
         ]

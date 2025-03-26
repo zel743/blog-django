@@ -6,7 +6,8 @@ from .forms import PostForm
 from .models import Post
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-
+from rest_framework import viewsets
+from .serializers import PostSerializer
 
 def index(request):
     return render(request, 'index.html')
@@ -83,3 +84,7 @@ def delete_post(request, post_id):
     
     # Si no es POST, muestra una página de confirmación
     return render(request, 'confirm_delete.html', {'post': post})
+#api 
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
