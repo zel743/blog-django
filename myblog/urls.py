@@ -17,6 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from blog import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 # by default the URLs add / at the beginning
 urlpatterns = [
@@ -24,8 +27,16 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('index/', views.index, name='index'),
     path('windows/', views.windows, name='windows'),
-    path('linux/', views.linux, name='linux'),
+    path('linux/', views.linux_posts, name='linux'),
     path('macos/', views.macos, name='macos'),
     path('', include('autenticacion.urls')),
+    path('posting/', views.create_post, name='create_post'),
+    path('', include('blog.urls')),
+    
    
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Para servir archivos multimedia en desarrollo
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
