@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row gap-8">
+        <!-- Sección de la imagen -->
+        <div class="w-full md:w-1/3 lg:w-1/4">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                {% if user.profile.image %}
+                <img src="{{user.profile.image.url}}" alt="Profile picture" class="w-full h-64 object-cover">
+                {% else %}
+                <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-500 text-lg">No image</span>
+                </div>
+                {% endif %}
+                <div class="p-4">
+                    <a href="/edit_profile/" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-300 inline-block text-center">
+                        Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de la información -->
+        <div class="w-full md:w-2/3 lg:w-3/4">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-6">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-6">Profile Information</h1>
+                    
+                    <div class="space-y-4">
+                        <!-- Username -->
+                        <div class="flex flex-col sm:flex-row border-b border-gray-100 pb-4">
+                            <div class="w-full sm:w-1/3 font-medium text-gray-600">Username:</div>
+                            <div class="w-full sm:w-2/3 text-gray-800">{{user}}</div>
+                        </div>
+                        
+                        <!-- Full Name -->
+                        <div class="flex flex-col sm:flex-row border-b border-gray-100 pb-4">
+                            <div class="w-full sm:w-1/3 font-medium text-gray-600">Full Name:</div>
+                            <div class="w-full sm:w-2/3 text-gray-800">{{user.get_full_name}}</div>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div class="flex flex-col sm:flex-row border-b border-gray-100 pb-4">
+                            <div class="w-full sm:w-1/3 font-medium text-gray-600">Email:</div>
+                            <div class="w-full sm:w-2/3 text-gray-800">{{user.email}}</div>
+                        </div>
+                        
+                        <!-- Phone Number (condicional) -->
+                        {% if user.profile.phone_no %}
+                        <div class="flex flex-col sm:flex-row border-b border-gray-100 pb-4">
+                            <div class="w-full sm:w-1/3 font-medium text-gray-600">Phone Number:</div>
+                            <div class="w-full sm:w-2/3 text-gray-800">{{user.profile.phone_no}}</div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Bio (condicional) -->
+                        {% if user.profile.bio %}
+                        <div class="flex flex-col sm:flex-row border-b border-gray-100 pb-4">
+                            <div class="w-full sm:w-1/3 font-medium text-gray-600">Bio:</div>
+                            <div class="w-full sm:w-2/3 text-gray-800">{{user.profile.bio}}</div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Redes sociales (condicionales) -->
+                        {% if user.profile.linkedin %}
+                        <div class="flex flex-col sm:flex-row border-b border-gray-100 pb-4">
+                            <div class="w-full sm:w-1/3 font-medium text-gray-600">LinkedIn:</div>
+                            <div class="w-full sm:w-2/3 text-blue-600 hover:text-blue-800">
+                                <a href="{{user.profile.linkedin}}" target="_blank" class="truncate">{{user.profile.linkedin}}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if user.profile.instagram %}
+                        <div class="flex flex-col sm:flex-row border-b border-gray-100 pb-4">
+                            <div class="w-full sm:w-1/3 font-medium text-gray-600">Instagram:</div>
+                            <div class="w-full sm:w-2/3 text-blue-600 hover:text-blue-800">
+                                <a href="{{user.profile.instagram}}" target="_blank" class="truncate">{{user.profile.instagram}}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if user.profile.facebook %}
+                        <div class="flex flex-col sm:flex-row border-b border-gray-100 pb-4">
+                            <div class="w-full sm:w-1/3 font-medium text-gray-600">Facebook:</div>
+                            <div class="w-full sm:w-2/3 text-blue-600 hover:text-blue-800">
+                                <a href="{{user.profile.facebook}}" target="_blank" class="truncate">{{user.profile.facebook}}</a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
