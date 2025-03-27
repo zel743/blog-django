@@ -4,7 +4,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
 from .models import Post
-
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib import messages
+from rest_framework import viewsets
+from .serializers import PostSerializer
 
 def index(request):
     return render(request, 'index.html')
@@ -27,7 +30,13 @@ def posting(request):
     form = PostForm()  # 
     return render(request, 'posting.html', {'form': form})
 
-@login_required
+def edit_post(request):
+    return render(request,'editpost.html')
+
+def profile(request):
+    return render(request,'profile.html')
+
+@login_required(login_url='login') # redirige si no eres usuario a pagina de login
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -43,3 +52,42 @@ def create_post(request):
 def linux_posts(request):
     posts = Post.objects.filter(section='linux').order_by('-created_at')
     return render(request, 'linux.html', {'posts': posts})
+def windows_posts(request):
+    posts = Post.objects.filter(section='windows').order_by('-created_at')
+    return render(request, 'windows.html', {'posts': posts})
+def macos_posts(request):
+    posts = Post.objects.filter(section='macos').order_by('-created_at')
+    return render(request, 'macos.html', {'posts': posts})
+
+@login_required  #funcion para editar post
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, author=request.user)  # Solo el autor puede editar
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('linux')  # Redirige a donde quieras después de editar
+    else:
+        form = PostForm(instance=post)
+    
+    return render(request, 'editpost.html', {
+        'form': form,
+        'post': post
+    })
+
+@login_required #funcion para eliminar post
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id, author=request.user)
+    
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, 'El post se ha eliminado correctamente.')
+        return redirect('linux')
+    
+    # Si no es POST, muestra una página de confirmación
+    return render(request, 'confirm_delete.html', {'post': post})
+#api 
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer

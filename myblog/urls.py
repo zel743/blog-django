@@ -26,12 +26,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('index/', views.index, name='index'),
-    path('windows/', views.windows, name='windows'),
+    path('windows/', views.windows_posts, name='windows'),
     path('linux/', views.linux_posts, name='linux'),
-    path('macos/', views.macos, name='macos'),
+    path('macos/', views.macos_posts, name='macos'),
     path('', include('autenticacion.urls')),
     path('posting/', views.create_post, name='create_post'),
     path('', include('blog.urls')),
+   # path('profile/',)
     
    
 ]
