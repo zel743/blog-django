@@ -26,5 +26,6 @@ urlpatterns = [
     path('post/<int:post_id>/delete/', delete_post, name='delete_post'), # elimina los posts
     path('api/', include(router.urls)),
     path('api/auth/login/', obtain_auth_token, name='api-login'),
+    path ('profile/', views.profile, name="profile"),
 
         ]

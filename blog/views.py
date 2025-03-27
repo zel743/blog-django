@@ -33,6 +33,9 @@ def posting(request):
 def edit_post(request):
     return render(request,'editpost.html')
 
+def profile(request):
+    return render(request,'profile.html')
+
 @login_required(login_url='login') # redirige si no eres usuario a pagina de login
 def create_post(request):
     if request.method == 'POST':
