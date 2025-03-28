@@ -3,11 +3,13 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
+from .forms import UserUpdateForm, ProfileUpdateForm
 from .models import Post
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from rest_framework import viewsets
 from .serializers import PostSerializer
+from .models import Profile
 
 def index(request):
     return render(request, 'index.html')
@@ -36,7 +38,32 @@ def edit_post(request):
 def profile(request):
     return render(request,'profile.html')
 
-@login_required(login_url='login') # redirige si no eres usuario a pagina de login
+@login_required
+def editprofile(request):
+    # Obtener o crear el perfil
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile has been updated!')
+            return redirect('profile')
+    else:
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    
+    return render(request, 'edit_profile.html', context)
+
+@login_required(login_url='login')
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -44,10 +71,19 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            return redirect('linux')  # Redirige a la lista de posts
+
+            # Obtener la URL de retorno de forma segura
+            next_url = request.POST.get('next')  
+            if not next_url:  
+                next_url = 'index'  # Página por defecto si no hay 'next'
+
+            return redirect(next_url) if next_url.startswith('/') else redirect('index')  # Seguridad
+
     else:
         form = PostForm()
-    return render(request, 'posting.html', {'form': form})
+        next_url = request.GET.get('next', 'index')  
+
+    return render(request, 'posting.html', {'form': form, 'next': next_url})
 
 def linux_posts(request):
     posts = Post.objects.filter(section='linux').order_by('-created_at')
@@ -91,3 +127,12 @@ def delete_post(request, post_id):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+
+@login_required
+def profile_view(request):
+    profile = get_object_or_404(Profile, user=request.user)
+    return render(request, 'profile.html', {
+        'user': request.user,
+        'profile': profile
+    })

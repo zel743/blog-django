@@ -15,14 +15,22 @@ def registro(request):
 
 def inicio_sesion(request):
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
+        username = request.POST.get('username')  # Usa .get() para evitar el error
+        password = request.POST.get('password')
+        
+        if not username or not password:
+            messages.error(request, 'Por favor ingresa usuario y contraseña')
+            return redirect('login')
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
             login(request, user)
-            return redirect('index')
-    else:
-        form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+            return redirect('profile')
+        else:
+            messages.error(request, 'Usuario o contraseña incorrectos')
+    
+    return render(request, 'login.html')
 
 def cerrar_sesion(request):
     logout(request)
