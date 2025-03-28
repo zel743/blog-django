@@ -10,6 +10,7 @@ from django.contrib import messages
 from rest_framework import viewsets
 from .serializers import PostSerializer
 from .models import Profile
+from django.core.exceptions import PermissionDenied
 
 def index(request):
     return render(request, 'index.html')
@@ -95,15 +96,20 @@ def macos_posts(request):
     posts = Post.objects.filter(section='macos').order_by('-created_at')
     return render(request, 'macos.html', {'posts': posts})
 
-@login_required  #funcion para editar post
+@login_required
 def edit_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id, author=request.user)  # Solo el autor puede editar
+    post = get_object_or_404(Post, id=post_id)
+    
+    # Permite al autor O al admin editar
+    if not (request.user == post.author or request.user.is_superuser):
+        raise PermissionDenied("No tienes permiso para editar este post")
     
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('linux')  # Redirige a donde quieras después de editar
+            messages.success(request, "Post actualizado correctamente")
+            return redirect('linux')
     else:
         form = PostForm(instance=post)
     
@@ -112,17 +118,23 @@ def edit_post(request, post_id):
         'post': post
     })
 
-@login_required #funcion para eliminar post
+
+@login_required
 def delete_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id, author=request.user)
+    post = get_object_or_404(Post, id=post_id)
+    
+    # Permite al autor O al admin eliminar
+    if not (request.user == post.author or request.user.is_superuser):
+        raise PermissionDenied("No tienes permiso para eliminar este post")
     
     if request.method == 'POST':
         post.delete()
         messages.success(request, 'El post se ha eliminado correctamente.')
         return redirect('linux')
-    
-    # Si no es POST, muestra una página de confirmación
+    # Si no es POST, muestra una página de confirmación    
     return render(request, 'confirm_delete.html', {'post': post})
+
+
 #api 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
