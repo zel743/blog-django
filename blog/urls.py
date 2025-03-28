@@ -9,6 +9,7 @@ from .views import create_post
 from rest_framework.routers import DefaultRouter
 from .views import PostViewSet
 from rest_framework.authtoken.views import obtain_auth_token
+from .views import profile_view, editprofile
 
 from . import views
 
@@ -26,6 +27,7 @@ urlpatterns = [
     path('post/<int:post_id>/delete/', delete_post, name='delete_post'), # elimina los posts
     path('api/', include(router.urls)),
     path('api/auth/login/', obtain_auth_token, name='api-login'),
-    path ('profile/', views.profile, name="profile"),
+    path ('profile/',  profile_view, name="profile"),
+    path('editprofile/', editprofile, name="editprofile"),
 
         ]

@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row gap-8">
+        <!-- Sección de la imagen -->
+        <div class="w-full md:w-1/3 lg:w-1/4">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                {% if user.profile.image %}
+                <img src="{{user.profile.image.url}}" alt="Profile picture" class="w-full h-64 object-cover">
+                {% else %}
+                <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-500 text-lg">No image</span>
+                </div>
+                {% endif %}
+                <div class="p-4">
+                    <a href="/profile/" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md transition duration-300 inline-block text-center">
+                        Back to Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección del formulario -->
+        <div class="w-full md:w-2/3 lg:w-3/4">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-6">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Profile</h1>
+                    
+                    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                        {% csrf_token %}
+                        
+                        <!-- User Fields -->
+                        <div class="space-y-4">
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <div class="w-full sm:w-1/2">
+                                    <label class="block text-gray-700 font-medium mb-2" for="first_name">
+                                        First Name
+                                    </label>
+                                    <input type="text" name="first_name" id="first_name" value="{{user.first_name}}"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div class="w-full sm:w-1/2">
+                                    <label class="block text-gray-700 font-medium mb-2" for="last_name">
+                                        Last Name
+                                    </label>
+                                    <input type="text" name="last_name" id="last_name" value="{{user.last_name}}"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2" for="email">
+                                    Email
+                                </label>
+                                <input type="email" name="email" id="email" value="{{user.email}}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        
+                        <!-- Profile Fields -->
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2" for="image">
+                                    Profile Image
+                                </label>
+                                <input type="file" name="image" id="image"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2" for="phone_no">
+                                    Phone Number
+                                </label>
+                                <input type="text" name="phone_no" id="phone_no" value="{{user.profile.phone_no|default:''}}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2" for="bio">
+                                    Bio
+                                </label>
+                                <textarea name="bio" id="bio" rows="4"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{user.profile.bio|default:''}}</textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2" for="linkedin">
+                                    LinkedIn URL
+                                </label>
+                                <input type="url" name="linkedin" id="linkedin" value="{{user.profile.linkedin|default:''}}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2" for="instagram">
+                                    Instagram URL
+                                </label>
+                                <input type="url" name="instagram" id="instagram" value="{{user.profile.instagram|default:''}}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 font-medium mb-2" for="facebook">
+                                    Facebook URL
+                                </label>
+                                <input type="url" name="facebook" id="facebook" value="{{user.profile.facebook|default:''}}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition duration-300">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
