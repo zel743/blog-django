@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegistroForm
+from django.contrib import messages
 
 def registro(request):
     if request.method == 'POST':
@@ -26,7 +27,8 @@ def inicio_sesion(request):
         
         if user is not None:
             login(request, user)
-            return redirect('profile')
+            messages.success(request, f'¡Bienvenido, {user.username}!') 
+            return redirect('index')
         else:
             messages.error(request, 'Usuario o contraseña incorrectos')
     

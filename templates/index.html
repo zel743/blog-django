@@ -1,8 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}MacOS | Urblog{% endblock %}
+{% block title %}index | Urblog{% endblock %}
 
 {% block content %}
+<!-- inicio.html -->
+{% if messages %}
+    <div id="django-message" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+        {% for message in messages %}
+            <div class="flex items-center justify-between p-4 rounded-lg shadow-lg
+                       {% if message.tags == 'error' %}bg-red-100 text-red-800
+                       {% else %}bg-green-100 text-green-800{% endif %}">
+                <span>{{ message }}</span>
+                <button onclick="this.parentElement.remove()" class="ml-4 text-xl">×</button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 <div class="flex justify-center items-center">
 <div class="p-8">
     <h1 class="text-3xl font-bold">Sistemas Operativos</h1>
