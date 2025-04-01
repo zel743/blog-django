@@ -10,8 +10,9 @@ from rest_framework.routers import DefaultRouter
 from .views import PostViewSet
 from rest_framework.authtoken.views import obtain_auth_token
 from .views import profile_view, editprofile
-
+from django.contrib import admin
 from . import views
+from .views import user
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
@@ -29,5 +30,7 @@ urlpatterns = [
     path('api/auth/login/', obtain_auth_token, name='api-login'),
     path ('profile/',  profile_view, name="profile"),
     path('editprofile/', editprofile, name="editprofile"),
+    path('api/', include('admi_panel.urls')),
+    path('user/', user, name='user'),  # Ruta para el CRUD de usuarios
 
         ]

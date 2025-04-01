@@ -29,7 +29,8 @@ urlpatterns = [
     path('windows/', views.windows_posts, name='windows'),
     path('linux/', views.linux_posts, name='linux'),
     path('macos/', views.macos_posts, name='macos'),
-    path('', include('autenticacion.urls')),
+    path('', include('autenticacion.urls')), #aqui van las urls de autenticacion
+    path('', include('admi_panel.urls')), #aqui van las urls del admi_panel
     path('posting/', views.create_post, name='create_post'),
     path('', include('blog.urls')),
    # path('profile/',)

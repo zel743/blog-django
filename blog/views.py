@@ -18,6 +18,9 @@ def index(request):
 def loginPage(request):
     return render(request, 'login.html')
 
+def user(request):
+      return render(request, 'user_crud.html')
+
 def registerPage(request):
     form = UserCreationForm()
     context = {'form':form}
@@ -148,3 +151,5 @@ def profile_view(request):
         'user': request.user,
         'profile': profile
     })
+
+  

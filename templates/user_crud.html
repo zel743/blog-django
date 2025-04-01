@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold text-center mb-4">CRUD de Usuarios</h1>
+
+        <!-- Formulario de creación de usuario -->
+        <form id="user-form" class="mb-4 space-y-2">
+            {% csrf_token %} <!-- Añade esto si estás usando Django templates -->
+            <input type="text" id="username" placeholder="Usuario" class="w-full p-2 border rounded" required>
+            <input type="email" id="email" placeholder="Email" class="w-full p-2 border rounded" required>
+            <input type="password" id="password" placeholder="Contraseña" class="w-full p-2 border rounded" required>
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Crear Usuario</button>
+        </form>
+
+        <!-- Lista de usuarios -->
+        <ul id="user-list" class="space-y-2"></ul>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api/users/";
+        
+        // Obtener CSRF token para Django
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        const csrftoken = getCookie('csrftoken');
+
+        // Obtener y mostrar usuarios
+        async function fetchUsers() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error('Error al obtener usuarios');
+                }
+                const data = await response.json();
+                
+                const userList = document.getElementById("user-list");
+                userList.innerHTML = "";
+                
+                // Asegúrate de que 'data' es un array
+                const users = Array.isArray(data) ? data : [data];
+                
+                users.forEach(user => {
+                    const li = document.createElement("li");
+                    li.className = "p-2 bg-gray-200 flex justify-between items-center rounded";
+                    li.innerHTML = `
+                        <span>${user.username || ''} - ${user.email || ''}</span>
+                        <button onclick="deleteUser(${user.id})" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700">
+                            Eliminar
+                        </button>
+                    `;
+                    userList.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error al cargar usuarios");
+            }
+        }
+
+        // Crear usuario
+        document.getElementById("user-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrftoken  // Necesario para Django
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Error al crear usuario');
+                }
+
+                // Limpiar el formulario después de crear
+                document.getElementById("user-form").reset();
+                
+                // Actualizar la lista
+                await fetchUsers();
+                
+            } catch (error) {
+                console.error("Error:", error);
+                alert(error.message || "Error al crear usuario");
+            }
+        });
+
+        // Eliminar usuario
+        async function deleteUser(id) {
+            if (!confirm("¿Estás seguro de que quieres eliminar este usuario?")) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}${id}/`, { 
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRFToken": csrftoken  // Necesario para Django
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al eliminar usuario');
+                }
+
+                await fetchUsers();
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Error al eliminar usuario");
+            }
+        }
+
+        // Cargar usuarios al inicio
+        document.addEventListener('DOMContentLoaded', fetchUsers);
+    </script>
+</body>
+</html>
