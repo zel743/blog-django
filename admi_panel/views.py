@@ -14,15 +14,3 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
 
 
-# Create your views here.
-# Listar y crear usuarios (GET, POST)
-class UserListCreateView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [AllowAny]  # Permitir acceso sin autenticación
-
-# Obtener, actualizar y eliminar usuario por ID (GET, PUT, DELETE)
-class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]  # Solo usuarios autenticados
