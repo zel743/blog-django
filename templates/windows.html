@@ -6,43 +6,48 @@
 <div class="container mx-auto px-4 py-8">
     <div class="text-center mb-12">
         <h1 class="text-4xl font-bold text-gray-800">Windows</h1>
-        <a href="{% url 'create_post' %}" class="mt-4 inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-            Crear nuevo post
-        </a>
+        <a href="{% url 'create_post' %}?next={{ request.path }}" 
+        class="mt-4 inline-block px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+         Crear nuevo post
+     </a>
     </div>
 
-    <!-- Lista de Posts -->
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {% for post in posts %}
-        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            {% if post.image %}
-                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
-            {% endif %}
-            <div class="p-6">
-                <h2 class="text-xl font-bold">{{ post.title }}</h2>
-                <p class="mt-2 text-gray-600">{{ post.content|truncatechars:100 }}</p>
-                <div class="mt-4 flex justify-between text-sm text-gray-500">
-                    <span>Por {{ post.author.username }}</span>
-                    <span>{{ post.created_at|date:"d/m/Y" }}</span>
-                </div>
-                <!-- Botón de edición solo para el autor -->
-                {% if post.author == request.user or request.user.is_superuser %}
-                <div class="mt-4 flex space-x-2">
-                    <a href="{% url 'edit_post' post.id %}" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
-                        Editar
-                    </a>
-                    <a href="{% url 'delete_post' post.id %}" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm">
-                        Eliminar
-                    </a>
-                </div>
-                {% endif %}
+    <!-- Lista de Posts (versión tarjetas centradas) -->
+<div class="flex flex-col items-center space-y-6">
+    {% for post in posts %}
+    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow w-full max-w-2xl"> <!-- Ancho máximo ajustable -->
+        {% if post.image %}
+            <img 
+                src="{{ post.image.url }}" 
+                alt="{{ post.title }}" 
+                class="w-full h-auto object-cover" <!-- Imagen conserva su relación de aspecto -->
+            >
+        {% endif %}
+        <div class="p-6">
+            <h2 class="text-xl font-bold">{{ post.title }}</h2>
+            <p class="mt-2 text-gray-600 whitespace-pre-line">{{ post.content }}</p>
+                        <div class="mt-4 flex justify-between text-sm text-gray-500">
+                <span>{{ post.author.username }}</span>
+                <span>{{ post.created_at|date:"d/m/Y" }}</span>
             </div>
+            <!-- Botones de edición/eliminación -->
+            {% if post.author == request.user or request.user.is_superuser %}
+            <div class="mt-4 flex space-x-2">
+                <a href="{% url 'edit_post' post.id %}" class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                    Editar
+                </a>
+                <a href="{% url 'delete_post' post.id %}" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm">
+                    Eliminar
+                </a>
+            </div>
+            {% endif %}
         </div>
-        {% empty %}
-        <div class="col-span-full text-center py-12">
-            <p class="text-gray-500">No hay posts sobre Windows aún.</p>
-        </div>
-        {% endfor %}
     </div>
+    {% empty %}
+    <div class="text-center py-12">
+        <p class="text-gray-500">No hay posts sobre Windows aún.</p>
+    </div>
+    {% endfor %}
+</div>
 </div>
 {% endblock %}
