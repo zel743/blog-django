@@ -102,41 +102,46 @@ def macos_posts(request):
 @login_required
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    
-    # Permite al autor O al admin editar
+
     if not (request.user == post.author or request.user.is_superuser):
         raise PermissionDenied("No tienes permiso para editar este post")
-    
+
+    # Obtener la URL de redirección desde GET o POST
+    next_url = request.GET.get('next') or request.POST.get('next') or 'linux'
+
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
             messages.success(request, "Post actualizado correctamente")
-            return redirect('linux')
+            return redirect(next_url)
     else:
         form = PostForm(instance=post)
-    
+
     return render(request, 'editpost.html', {
         'form': form,
-        'post': post
+        'post': post,
+        'next': next_url  # 
     })
-
 
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    
-    # Permite al autor O al admin eliminar
+
     if not (request.user == post.author or request.user.is_superuser):
         raise PermissionDenied("No tienes permiso para eliminar este post")
-    
+
+    next_url = request.GET.get('next') or request.POST.get('next') or 'index'
+
     if request.method == 'POST':
         post.delete()
         messages.success(request, 'El post se ha eliminado correctamente.')
-        return redirect('linux')
-    # Si no es POST, muestra una página de confirmación    
-    return render(request, 'confirm_delete.html', {'post': post})
+        return redirect(next_url)
 
+    return render(request, 'confirm_delete.html', {
+        'post': post,
+        'next': next_url
+    })
 
 #api 
 class PostViewSet(viewsets.ModelViewSet):

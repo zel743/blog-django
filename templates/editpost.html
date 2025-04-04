@@ -5,6 +5,7 @@
     <h1 class="text-2xl font-bold mb-6">Editar Post</h1>
     <form method="post" enctype="multipart/form-data" class="space-y-4">
         {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
         {{ form.as_p }}
         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
             Guardar Cambios
