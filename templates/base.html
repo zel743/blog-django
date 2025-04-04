@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-300 h-full">
-    <header class="bg-slate-400 text-white p-4 flex items-center justify-between">
+    <header class="bg-stone-500 text-white p-4 flex items-center justify-between">
         <div class="flex items-center">
             <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="h-10 mr-2">
             <h1 class="text-2xl font-bold">Urblog</h1>
@@ -16,12 +16,12 @@
         <div class="flex items-center">
             {% if user.is_authenticated %}
                 <!-- Si el usuario está autenticado, muestra su nombre y un enlace para cerrar sesión -->
-                <div class="bg-gray-500 text-white px-2 py-1 rounded">
+                <div class="font-semibold text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
                     Bienvenido,                   
                     <a href="{% url 'profile' %}" class="hover:text-blue-300">  {{ user.username }}! 
                     </a>
                 </div>
-                <a href="{% url 'logout' %}" class="ml-2 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
+                <a href="{% url 'logout' %}" class="font-semibold text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
                     Cerrar sesión
                 </a>
             {% else %}
@@ -33,7 +33,7 @@
         </div>
     </header>
 
-    <nav class="bg-gray-500 text-white p-4">
+    <nav class="bg-gray-500 text-white p-4 ">
         <div class="max-w-screen-xl mx-auto flex items-center justify-center">
             <ul class="flex space-x-8">
                 <li><a href="{% url 'index' %}" class="hover:text-blue-300">Menu</a></li>
@@ -43,11 +43,41 @@
             </ul>
         </div>
     </nav>
-
+    {% if messages %}
+    <div class="max-w-2xl mx-auto mt-4 space-y-2">
+      {% for message in messages %}
+        <div data-autohide class="px-4 py-2 rounded-lg shadow-md text-white 
+            {% if message.tags == 'success' %} bg-green-600 
+            {% elif message.tags == 'error' %} bg-red-600 
+            {% elif message.tags == 'warning' %} bg-yellow-500 
+            {% else %} bg-blue-600 {% endif %}">
+          {{ message }}
+          <button onclick="this.parentElement.remove()" class="ml-4 font-bold text-lg">×</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  
     <!-- Main contenido, ocupa toda la altura de la pantalla -->
-    <main class="bg-stone-300 w-full h-[calc(100%-144px)]">
+    <main class="bg-stone-300 w-full h-[calc(100%-144px)] bg-transparent">
         {% block content %}
         {% endblock %}
     </main>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.querySelectorAll('[data-autohide]').forEach(el => el.remove());
+      }, 4000); // 4 segundos
+    });
+  </script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.querySelectorAll('[data-autohide]').forEach(el => el.remove());
+      }, 4000); // Se oculta después de 4 segundos
+    });
+  </script>
+  
 </html>
