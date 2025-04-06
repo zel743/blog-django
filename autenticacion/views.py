@@ -9,6 +9,8 @@ def registro(request):
         form = RegistroForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Se ha registrado tu usuario!')
+
             return redirect('login')
     else:
         form = RegistroForm()
@@ -36,4 +38,6 @@ def inicio_sesion(request):
 
 def cerrar_sesion(request):
     logout(request)
+    messages.success(request, 'Hasta pronto!')
+
     return redirect('login')

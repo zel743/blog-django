@@ -46,15 +46,25 @@
     {% if messages %}
     <div class="max-w-2xl mx-auto mt-4 space-y-2">
       {% for message in messages %}
-        <div data-autohide class="px-4 py-2 rounded-lg shadow-md text-white 
-            {% if message.tags == 'success' %} bg-green-600 
-            {% elif message.tags == 'error' %} bg-red-600 
-            {% elif message.tags == 'warning' %} bg-yellow-500 
-            {% else %} bg-blue-600 {% endif %}">
-          {{ message }}
-          <button onclick="this.parentElement.remove()" class="ml-4 font-bold text-lg">×</button>
-        </div>
-      {% endfor %}
+<div class="flex justify-center my-4">
+    <div 
+        data-autohide
+        class="px-4 py-2 rounded-lg shadow-md text-white inline-flex items-center
+        {% if message.tags == 'success' %} bg-green-600 
+        {% elif message.tags == 'error' %} bg-red-600 
+        {% elif message.tags == 'warning' %} bg-yellow-500 
+        {% else %} bg-blue-600 {% endif %}"
+    >
+        {{ message }}
+        <button 
+            onclick="this.parentElement.remove()" 
+            class="ml-2 font-bold text-lg hover:opacity-80 focus:outline-none"
+        >
+            ×
+        </button>
+    </div>
+</div>
+{% endfor %}
     </div>
   {% endif %}
   
