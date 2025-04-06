@@ -54,7 +54,7 @@ def editprofile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, 'Your profile has been updated!')
+            messages.success(request, 'Tu perfil se ha actualizado!')
             return redirect('profile')
     else:
         user_form = UserUpdateForm(instance=request.user)
@@ -75,6 +75,8 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            messages.success(request, 'Tu post se ha publicado!')
+
 
             # Obtener la URL de retorno de forma segura
             next_url = request.POST.get('next')  
