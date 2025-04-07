@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'admi_panel',
     'corsheaders',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -142,4 +143,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',  # Habilita tokens
     ],
+}
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
 }
